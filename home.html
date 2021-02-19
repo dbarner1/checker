@@ -1,23 +1,54 @@
 <html>
+  <p  style="margin:0; display:inline">Last updated:</p>
+  <p id="datetime"  style="margin:0; display:inline">Last updated:</p>
+  <a target="_blank" href='http://t.ly/0dO6'><p>Click here when an appt is available: MA Site</p></a>
+  <h1>AVAILABLE</h1>
+  <div id="root"></div>
+
+  <h1>NOT AVAILABLE</h1>
+  <div id="noAppointments"></div>
   <script>
 const urls = [ 'http://localhost:8010/proxy/clinic/search?q[services_name_in][]=Vaccination&q[age_groups_name_in][]=Seniors&q[venue_search_name_or_venue_name_i_cont]=&q[clinic_date_gteq]=&q[vaccinations_name_i_cont]=&location=02052&search_radius=All&commit=Search&page=1#search_results',
   'http://localhost:8010/proxy/clinic/search?q[services_name_in][]=Vaccination&q[age_groups_name_in][]=Seniors&q[venue_search_name_or_venue_name_i_cont]=&q[clinic_date_gteq]=&q[vaccinations_name_i_cont]=&location=02052&search_radius=All&commit=Search&page=2#search_results',
   'http://localhost:8010/proxy/clinic/search?q[services_name_in][]=Vaccination&q[age_groups_name_in][]=Seniors&q[venue_search_name_or_venue_name_i_cont]=&q[clinic_date_gteq]=&q[vaccinations_name_i_cont]=&location=02052&search_radius=All&commit=Search&page=3#search_results'
 ]
+const linebreak = document.createElement("br");
+const ptag = document.createElement("p");
+const root = document.getElementById("root");
+
+root.appendChild(linebreak);
+root.appendChild(linebreak);
+
+var dt = new Date();
+document.getElementById("datetime").innerHTML = dt.toLocaleString();
+
+const noAppointments = document.getElementById("root");
+  noAppointments.appendChild(linebreak);
+  noAppointments.appendChild(linebreak);
+
 
 function process(data) {
-  const newData = data.replace(':', 'WANKY').split('<')    
+  const newData = data.replace(':', 'whatev').split('<')    
     newData.forEach((item, index) => {
       if(item.includes('Available Appointments')) {
         if(newData[index+1] === '/strong> 0') {
           const name = newData[index-25].replace('p class="text-xl font-black">', '');
           const numAppointments = newData[index+1].replace('/strong>', '');
-          console.log(name)
-          console.log("      Appointments: ", numAppointments)
-          console.log("      http://t.ly/0dO6")
-          console.log("     ");
+          noAppointments.appendChild(ptag);
+          document.getElementById("noAppointments").innerHTML += `<p>${name}</p>`;
+          noAppointments.appendChild(linebreak);
+          document.getElementById("noAppointments").innerHTML += `Appointments: ${numAppointments}`;
+          document.getElementById("noAppointments").innerHTML += `<p>=======</p>`;
+
 
         } else {
+          const name = newData[index-25].replace('p class="text-xl font-black">', '');
+          const numAppointments = newData[index+1].replace('/strong>', '');
+          noAppointments.appendChild(ptag);
+          document.getElementById("root").innerHTML += `<p>${name}</p>`;
+          noAppointments.appendChild(linebreak);
+          document.getElementById("root").innerHTML += `Appointments: ${numAppointments}`;
+          noAppointments.appendChild(ptag);
           console.log(newData[index+1]);
         } 
       }
